@@ -14,7 +14,10 @@
     </header>
     <main>
         <p>Has iniciado sesión correctamente.</p>
-        <?php print_r($especialidades); ?>
+        <pre>
+            <?php print_r($especialidades); ?>
+</pre>
+        </pre>
         <a href="login" class="button">Cerrar Sesión (Volver)</a>
     </main>
 </body>
