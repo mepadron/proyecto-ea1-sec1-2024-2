@@ -6,37 +6,36 @@ if ($query_string_pos !== false) {
     $requested_uri = substr($requested_uri, 0, $query_string_pos);
 }
 
+// Limpiar la ruta para el router (quitar el slash inicial y subcarpetas si existen)
+// Esto asume que el proyecto está en la raíz o manejamos la ruta relativa
+$script_name = dirname($_SERVER['SCRIPT_NAME']);
+$route = str_replace($script_name, '', $requested_uri);
+$route = trim($route, '/');
+
 // Si la solicitud es para un archivo dentro de /public/
-if (strpos($requested_uri, '/public/') === 0) {
-    $file_path = __DIR__ . $requested_uri;
+if (strpos($requested_uri, '/public/') !== false) {
+    $path_parts = explode('/public/', $requested_uri);
+    $file_path = __DIR__ . '/public/' . end($path_parts);
     if (file_exists($file_path) && is_file($file_path)) {
-        // Sirve el archivo estático directamente
-        return false;
+        return false; 
     }
 }
 
-//private para adjuntar una variable o propiedad a una clase
-//ej private $login="mp"; entre comillas cadena de caracteres
-//$pass=123; numeros enteros
-//si en vez de de private es PUBLIC entonces la propiedad o la variable es general
-/*
-class ValidarUsuario{
-private $login="mp";
-private $pass="123";
+// Sistema de ruteo simple
+switch ($route) {
+    case '':
+    case 'login':
+        require_once "view/validar_view.php";
+        break;
+    
+    case 'home':
+        require_once "view/home_view.php";
+        break;
 
-public function login($l, $p){
-    if($l==$this->login AND $p==$this->pass){
-        echo "Bienvenido al Sistema";
-    }else{
-        echo "Credenciales no Existen";
-    }
+    default:
+        http_response_code(404);
+        echo "<h1>404 - Página no encontrada</h1>";
+        echo "<p>La ruta '$route' no existe.</p>";
+        echo "<a href='login'>Volver al inicio</a>";
+        break;
 }
-}
-$s=new ValidarUsuario();
-$s->login("mp", "123");
-
-//                {C - controlador -> puente
-// arquitectura<- {M - modelo
-//                {V - vista     
-*/
-include_once("view/validar_view.php");

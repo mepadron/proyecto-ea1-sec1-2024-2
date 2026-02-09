@@ -8,32 +8,34 @@ include_once("controller/validar_controller.php");
 
 if (isset($_POST['submit'])) {
     $objetct = new ValidarUsuario();
-    echo "<br>";
-    // print_r($_POST);
     $response = $objetct->login($_POST['usuario'], $_POST['password']);
 
     if ($response) {
-        echo "usuario valido";
+        header("Location: home");
+        exit();
     } else {
-        echo "usuario NOOOOOOO valido";
+        $error = "Usuario o contraseña incorrectos";
     }
 }
-
-
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Validar Usuario</title>
-    <!-- <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css"> -->
-    <link rel="stylesheet" href="../public/simple.css">
+    <link rel="stylesheet" href="public/simple.css">
 </head>
 
 <body>
+
+    <?php if (isset($error)): ?>
+        <blockquote style="color: var(--error); border-left: 5px solid red;">
+            <?php echo $error; ?>
+        </blockquote>
+    <?php endif; ?>
 
     <form action="#" method="post">
         <label for="">Usuario</label>
