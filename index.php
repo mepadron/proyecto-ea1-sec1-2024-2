@@ -1,4 +1,6 @@
 <?php
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 // Permitir servir archivos estáticos desde /public/
 $requested_uri = $_SERVER['REQUEST_URI'];
 $query_string_pos = strpos($requested_uri, '?');
@@ -17,7 +19,7 @@ if (strpos($requested_uri, '/public/') !== false) {
     $path_parts = explode('/public/', $requested_uri);
     $file_path = __DIR__ . '/public/' . end($path_parts);
     if (file_exists($file_path) && is_file($file_path)) {
-        return false; 
+        return false;
     }
 }
 
@@ -27,9 +29,11 @@ switch ($route) {
     case 'login':
         require_once "view/validar_view.php";
         break;
-    
+
     case 'home':
-        require_once "view/home_view.php";
+        require_once "controller/usuario_controler.php";
+        $controller = new ClientController();
+        $controller->index();
         break;
 
     default:
